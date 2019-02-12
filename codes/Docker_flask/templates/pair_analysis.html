@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Style-Type" content="text/css" /> 
+    <title>pair_analysis.html</title>
+    <link href="/library/skin/tool_base.css" type="text/css" rel="stylesheet" media="all" />
+    <link href="/library/skin/morpheus-nyu/tool.css" type="text/css" rel="stylesheet" media="all" />
+    <script type="text/javascript" src="/library/js/headscripts.js"></script>
+<script type="text/javascript" src="/media-gallery-tool/js/kaltura-upgrade.js"></script>    <style>body { padding: 5px !important; }</style>
+  </head>
+  <body>
+{% extends "base.html" %}
+{% block content %}
+<nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Inter Day Data</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/order_book">Order Book</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link  active" href="/pair_analysis/1">Pair Analysis</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/back_test">Back Test</a>
+        </li>
+    </ul>
+</nav>
+
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+    <h1>Dashboard</h1>
+
+    <section class="row text-center placeholders">
+        <div class="col-24 col-sm-12 placeholder">
+            <div id="myDiv"></div>
+            <h4>Pair#{{pair_id}}</h4>
+        </div>
+    </section>
+    <h2>Pair list</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Pair ID</th>
+                <th>Ticker1</th>
+                <th>Ticker2</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pair in pair_list %}
+            <tr>
+                <td><a href="/pair_analysis/{{pair.Id}}">{{pair.pairid}} </a></td>
+                <td> {{pair.ticker1}}</td>
+                <td> {{pair.ticker2}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    Plotly.d3.csv('{{url_for('static', filename='cache/pair_analysis.csv')}}', function(rows){
+
+    var x = rows.map(function(row){
+        return row['ticker1'];
+      });
+
+    var y = rows.map(function(row){
+        return row['ticker2'];
+      });
+
+    var trace1 = {
+      x:x ,
+      y:y,
+      mode: 'markers',
+      name: 'points',
+      marker: {
+        color: '#0099ff',
+        size: 2,
+        opacity: 0.4
+      },
+    };
+
+
+    var trace1 = {
+  x: x,
+  y: y,
+  mode: 'markers',
+  name: 'points',
+  marker: {
+    color: '#0099ff',
+    size: 2,
+    opacity: 0.4
+  },
+  type: 'scatter'
+};
+var trace2 = {
+  x: x,
+  y: y,
+  name: 'density',
+  ncontours: 20,
+  colorscale: 'Hot',
+  reversescale: true,
+  showscale: false,
+  type: 'histogram2dcontour'
+};
+var trace3 = {
+  x: x,
+  name: 'x density',
+  marker: {color: '#0099ff'},
+  yaxis: 'y2',
+  type: 'histogram'
+};
+var trace4 = {
+  y: y,
+  name: 'y density',
+  marker: {color: '#0099ff'},
+  xaxis: 'x2',
+  type: 'histogram'
+};
+var data = [trace1, trace2, trace3, trace4];
+var layout = {
+  showlegend: false,
+  autosize: false,
+  width: 1600,
+  height: 700,
+  margin: {t: 50},
+  hovermode: 'closest',
+  bargap: 0,
+  xaxis: {
+    title: '{{pair_list[pair_id].ticker1}}',
+    domain: [0, 0.85],
+    showgrid: false,
+    zeroline: false
+  },
+  yaxis: {
+  title: '{{pair_list[pair_id].ticker2}}',
+    domain: [0, 0.85],
+    showgrid: false,
+    zeroline: false
+  },
+  xaxis2: {
+    domain: [0.85, 1],
+    showgrid: false,
+    zeroline: false
+  },
+  yaxis2: {
+    domain: [0.85, 1],
+    showgrid: false,
+    zeroline: false
+  }
+};
+Plotly.newPlot('myDiv', data, layout);
+});
+</script>
+{% endblock %}
+  </body>
+</html>

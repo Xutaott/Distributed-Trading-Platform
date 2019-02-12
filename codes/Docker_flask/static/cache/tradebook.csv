@@ -1,0 +1,9 @@
+OrderIndex,Symbol,Side,OpenPrice,Qty,Status,ClosePrice
+1,CCL,Buy,65.01,1000,Closed,66.77
+2,CHU,Buy,13.175,6100,Closed,13.86
+3,CN,Buy,37.72,1000,Closed,38.19
+4,CUK,Buy,65.51,1000,Closed,68.19
+5,EEP,Buy,10.24,9000,Closed,12.81
+6,EEQ,Buy,9.565,7800,Closed,11.92
+7,GGB,Buy,4.77,8800,Closed,4.02
+8,RIO,Buy,54.68,7500,Closed,55.97
